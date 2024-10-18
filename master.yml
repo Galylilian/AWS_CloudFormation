@@ -4,13 +4,13 @@ Metadata:
         ParameterGroups:
             -
                 Label:
-                    default: 'Base de Datos Platzi-DynamoDB'
+                    default: 'Base de Datos-DynamoDB'
                 Parameters:
                     - DynamoName
                     - DynamoKey
             -
                 Label:
-                    default: 'Función Lambda Platzi'
+                    default: 'Función Lambda Mine'
                 Parameters:
                     - LambdaName
                     - LambdaRuntime
@@ -74,10 +74,10 @@ Resources:
     RestApiAD:
       Type: AWS::ApiGateway::RestApi
       Properties:
-        Name: api-platzi
+        Name: api-mine
     Method:
       Type: AWS::ApiGateway::Method
-      DependsOn: DynamoPlatzi
+      DependsOn: Dynamomine
       Properties:
         HttpMethod: POST
         ResourceId: !GetAtt RestApiAD.RootResourceId
@@ -97,7 +97,7 @@ Resources:
    
     ApiGatewayResource:
       Type: AWS::ApiGateway::Resource
-      DependsOn: DynamoPlatzi
+      DependsOn: Dynamomine
       Properties:
         ParentId: !GetAtt RestApiAD.RootResourceId
         PathPart: 'lambda'
@@ -105,7 +105,7 @@ Resources:
 
     ApiGatewayModel:
       Type: AWS::ApiGateway::Model
-      DependsOn: DynamoPlatzi
+      DependsOn: Dynamomine
       Properties:
         ContentType: 'application/json'
         RestApiId: !Ref RestApiAD
@@ -113,7 +113,7 @@ Resources:
 
     ApiGatewayStage:
         Type: AWS::ApiGateway::Stage
-        DependsOn: DynamoPlatzi
+        DependsOn: Dynamomine
         Properties:
           DeploymentId: !Ref ApiGatewayDeployment
           Description: Lambda API Stage v0
@@ -129,7 +129,7 @@ Resources:
 
     ApiGatewayIamRole:
       Type: AWS::IAM::Role
-      DependsOn: DynamoPlatzi
+      DependsOn: Dynamomine
       Properties:
         AssumeRolePolicyDocument:
           Version: '2012-10-17'
@@ -166,11 +166,11 @@ Resources:
         Role: !GetAtt LambdaRole.Arn
         Environment:
             Variables:
-                DYNAMO_PLATZI: !Ref DynamoPlatzi
+                DYNAMO_Mine: !Ref Dynamomine
 
     LambdaPolicyEC2:
         Type: AWS::IAM::ManagedPolicy
-        DependsOn: DynamoPlatzi
+        DependsOn: Dynamomine
         Properties:
             PolicyDocument:
                 Version: 2012-10-17
